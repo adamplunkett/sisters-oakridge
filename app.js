@@ -92,7 +92,7 @@ function render(key){
   el("hint").textContent = {
     opt2:"Option 2 rides the ridge behind the Wall — the 23.3 miles from the high point to Elk Camp are what Option 5 never touches.",
     opt5:"Option 5's grey dotted line is the Aufderheide, driven in about 75 minutes. Everything ridden is trail except the Larison Rock road climb.",
-    opt7:"Two short dotted legs, both driven: 8.6 miles of OR-126 around the lava, then the Aufderheide. Nothing ridden here is rated harder than the Alpine, and that one is shuttled."
+    opt7:"Option 2 with the lava swapped for 8.6 miles of highway. The only dotted leg is the Wall — 12.6 miles driven, and everything else is ridden."
   }[key];
   buildTable(o); buildProfile(o); clearOut();
   ["opt2","opt5","opt7"].forEach(k=>
