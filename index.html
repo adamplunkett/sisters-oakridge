@@ -49,6 +49,11 @@ header{display:flex;flex-direction:column;gap:10px;border-bottom:2px solid var(-
 #map{position:absolute;inset:0}
 .leaflet-container{background:var(--band-2);font:inherit;outline:none}
 .leaflet-control-attribution{font-size:10px;background:rgba(255,255,255,.82)}
+.leaflet-control-layers{border:1px solid var(--rule)!important;border-radius:2px!important;
+  box-shadow:0 1px 4px rgba(0,0,0,.18)!important;background:var(--card)!important;color:var(--ink);
+  font:500 12.5px/1.5 inherit;padding:8px 11px!important}
+.leaflet-control-layers label{display:flex;align-items:center;gap:7px;cursor:pointer}
+.leaflet-control-layers-base{display:flex;flex-direction:column;gap:3px}
 @media (prefers-color-scheme:dark){.leaflet-control-attribution{background:rgba(20,28,25,.82);color:#9aa8a2}
   .leaflet-control-attribution a{color:#7fc6cc}}
 .wp{background:var(--card);border:1px solid var(--rule);color:var(--ink);border-radius:2px;
@@ -107,8 +112,9 @@ footer{color:var(--ink-3);font-size:12.5px;border-top:1px solid var(--rule);padd
   <div class="eyebrow">Sisters → Oakridge · Oregon Cascades · four days</div>
   <h1>Two Ways to Oakridge</h1>
   <p class="lede">Option 2 skips the Wall by van but still rides the ridge behind it. Option 5 skips the
-  connector altogether. Move the cursor along either route for distance, elevation, grade and difficulty —
-  and for whether that stretch is measured trail geometry or a corridor drawn between verified waypoints.</p>
+  connector altogether. Move the cursor along either route for distance, elevation, grade and difficulty.
+  Both lines are the actual GPX of the parent route — <a href="https://bikepacking.com/routes/three-sisters-three-rivers/"
+  style="color:var(--accent)">Three Sisters Three Rivers</a> — not a corridor drawn between waypoints.</p>
 </header>
 
 <div class="tabs" role="group" aria-label="Choose a route">
@@ -133,7 +139,7 @@ footer{color:var(--ink-3);font-size:12.5px;border-top:1px solid var(--rule);padd
       </div>
       <div class="grid2" style="border-top:1px solid var(--rule);padding-top:13px">
         <div class="stat"><span class="k">Ridden</span><span class="v mono" id="t-dist">—</span></div>
-        <div class="stat"><span class="k">Verified</span><span class="v mono" id="t-meas">—</span></div>
+        <div class="stat"><span class="k">Climbing</span><span class="v mono" id="t-meas">—</span></div>
       </div>
     </aside>
   </div>
@@ -143,7 +149,7 @@ footer{color:var(--ink-3);font-size:12.5px;border-top:1px solid var(--rule);padd
     <span><i class="mk circle"></i>Easy</span><span><i class="mk square"></i>Intermediate</span>
     <span><i class="mk diamond"></i>Advanced</span><span><i class="mk dbl"></i>Black diamond</span>
     <span><i class="mk drive"></i>Driven, not ridden</span>
-    <span style="color:var(--ink-3)">Dashed line = corridor approximate, not measured geometry</span>
+    <span style="color:var(--ink-3)">Dashed line = estimated, not from the route file</span>
   </div>
   <div class="tw"><table>
     <thead><tr><th>Segment</th><th class="n">Miles</th><th class="n">Gain</th><th class="n">Loss</th><th>Rating</th></tr></thead>
@@ -151,20 +157,24 @@ footer{color:var(--ink-3);font-size:12.5px;border-top:1px solid var(--rule);padd
 </section>
 
 <section class="note">
-  <h2>What is measured and what is drawn</h2>
-  <p><b>Solid lines are real trail geometry</b> from OpenStreetMap, with elevations sampled from USGS NED
-  10-metre data — the McKenzie River Trail at every 0.1 mile, the Aufderheide, Indian Ridge, the Alpine Trail
-  and Larison Rock at 0.15–0.2 mile.</p>
-  <p><b>Dashed lines are corridors, not routes.</b> The group's route file gives waypoints for Day 1 and for the
-  ridge between Indian Ridge and Elk Camp, but not the line between them. Those segments are drawn through the
-  verified waypoints and scaled to the route file's own mileage, so the distances are right and the shape is
-  not. The grade readout is switched off there rather than reporting a fictional number.</p>
-  <p><b>Neither line is a navigation track.</b> Carry the GPX.</p>
+  <h2>Where the numbers come from</h2>
+  <p><b>Everything solid is the route file itself.</b> Our four days are a subsection of Three Sisters Three
+  Rivers, a published 325-mile route whose GPX has 21,336 track points carrying distance and elevation. Sisters
+  to Oakridge is 6,301 of them: <b>134.5 miles, +16,374 / −18,327 ft</b>. Distance, grade and climbing here are
+  read straight off that file rather than inferred.</p>
+  <p><b>It confirms the itinerary, with two exceptions.</b> Every waypoint agrees to within half a mile and
+  about twenty feet. But the original Day 4 is given as 14.2 mi / +1,633 ft, and the file makes it
+  <b>18.0 mi / +2,244 ft</b> — nearly four miles and six hundred feet light. And the high point after Cougar is
+  <b>5,018 ft at mile 93.2</b>, not 4,967 at 92.8.</p>
+  <p><b>One segment is still an estimate:</b> the Larison Rock road climb, drawn dashed, because it is not on
+  the parent route at all. Larison Rock's descent is OpenStreetMap geometry with USGS elevations.</p>
+  <p><b>This is not a navigation track.</b> Carry the real GPX.</p>
 </section>
 
 <footer>
-  Base map © OpenTopoMap and OpenStreetMap contributors, CC-BY-SA. Elevations USGS NED 10 m; quarter-mile-scale
-  sampling understates short rollers, so climbing totals are floors. Difficulty and surface from Forest Service,
+  Route geometry and elevation from the Three Sisters Three Rivers GPX (RideWithGPS route 10895044, published
+  on BIKEPACKING.com). Larison Rock from OpenStreetMap with USGS NED 10 m elevations. Base maps: USGS The
+  National Map, and OpenTopoMap © OpenStreetMap contributors. Difficulty and surface from Forest Service,
   MTB Project, Trailforks and Oregon Timber Trail sources.
 </footer>
 </div>

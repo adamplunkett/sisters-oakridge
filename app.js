@@ -22,20 +22,32 @@ const f0 = n => n==null ? "—" : Math.round(n).toLocaleString();
 // zoomSnap:0 lets fitBounds use a fractional zoom — integer zoom wasted half the frame
 const map = L.map("map",{scrollWheelZoom:true, zoomControl:true, attributionControl:true,
   zoomSnap:0, zoomDelta:0.5, wheelPxPerZoomLevel:120});
-L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",{
-  maxZoom:16, minZoom:8, subdomains:"abc",
-  attribution:'© <a href="https://opentopomap.org">OpenTopoMap</a> · © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+const USGS_ATTR = 'Tiles © <a href="https://www.usgs.gov/">USGS</a> The National Map';
+const bases = {
+  "USGS Topo": L.tileLayer(
+    "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}",
+    {maxZoom:16, minZoom:8, attribution:USGS_ATTR}),
+  "Imagery + topo": L.tileLayer(
+    "https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryTopo/MapServer/tile/{z}/{y}/{x}",
+    {maxZoom:16, minZoom:8, attribution:USGS_ATTR}),
+  "Contours (OpenTopoMap)": L.tileLayer(
+    "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    {maxZoom:16, minZoom:8, subdomains:"abc",
+     attribution:'© <a href="https://opentopomap.org">OpenTopoMap</a> · © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'})
+};
+bases["USGS Topo"].addTo(map);
+L.control.layers(bases,null,{position:"bottomright",collapsed:false}).addTo(map);
 
 let layer = L.layerGroup().addTo(map);
 let cursor = null, curOpt = "opt2", segLines = [], flat = [];
 
 const el = id => document.getElementById(id);
 
-const MAJOR = new Set(["Sisters","Big Lake","McKenzie Bridge","Cougar HS","Indian Ridge",
-                       "Elk Camp","Alpine TH #5","Oakridge"]);
+const MAJOR = new Set(["Sisters","Camp Sherman","Big Lake","McKenzie Bridge","Cougar HS",
+                       "High point 5,018 ft","Elk Camp","Oakridge"]);
 const DIR = {"Clear Lake":"left","Blue Pool":"left","Big Lake":"top","Cougar HS":"left",
-             "Elk Camp":"left","Alpine TH #5":"left","Westfir":"left","Oakridge":"bottom"};
+             "Elk Camp":"left","Westfir":"left","Oakridge":"bottom","Camp Sherman":"top",
+             "High point 5,018 ft":"right","Belknap HS":"left"};
 function drawMarks(){
   D.marks.forEach(m=>{
     const major = MAJOR.has(m.n);
@@ -72,9 +84,9 @@ function render(key){
   const b = L.latLngBounds(o.segs.flatMap(s=>s.pts.map(p=>[p[0],p[1]])));
   map.fitBounds(b,{padding:[22,22]});
   el("t-dist").textContent = o.tot.dist+" mi";
-  el("t-meas").textContent = o.tot.meas+" mi";
+  el("t-meas").textContent = "+"+o.tot.gain.toLocaleString()+" ft";
   el("hint").textContent = key==="opt2"
-    ? "Option 2 rides the ridge behind the Wall — the long dashed blue leg from Indian Ridge to Elk Camp is the 23.7 miles Option 5 never touches."
+    ? "Option 2 rides the ridge behind the Wall — the 23.3 miles from the high point to Elk Camp are what Option 5 never touches."
     : "Option 5's grey dotted line is the Aufderheide, driven in about 75 minutes. Everything ridden is trail except the Larison Rock road climb.";
   buildTable(o); buildProfile(o); clearOut();
   document.getElementById("b2").setAttribute("aria-pressed", key==="opt2");
