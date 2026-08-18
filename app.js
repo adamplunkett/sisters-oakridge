@@ -49,7 +49,11 @@ const DIR = {"Clear Lake":"left","Blue Pool":"left","Big Lake":"top","Cougar HS"
              "Elk Camp":"left","Westfir":"left","Oakridge":"bottom","Camp Sherman":"top",
              "High point 5,018 ft":"right","Belknap HS":"left"};
 function drawMarks(){
-  D.marks.forEach(m=>{
+  // only label places the current option actually passes (within ~1.5 mi of its line)
+  const rid = new Set(D[curOpt].segs.map((s,i)=>s.ridden?i:-1).filter(i=>i>=0));
+  const near = m => flat.some(p => rid.has(p.si) &&
+    Math.abs(p.lat-m.lat)<0.025 && Math.abs(p.lng-m.lon)<0.032);
+  D.marks.filter(near).forEach(m=>{
     const major = MAJOR.has(m.n);
     L.circleMarker([m.lat,m.lon],{radius: major?4.5:3.5, color:C("--ink"),
       weight: major?2:1.5, fillColor:C("--card"), fillOpacity:1, interactive:!major})
@@ -85,12 +89,14 @@ function render(key){
   map.fitBounds(b,{padding:[22,22]});
   el("t-dist").textContent = o.tot.dist+" mi";
   el("t-meas").textContent = "+"+o.tot.gain.toLocaleString()+" ft";
-  el("hint").textContent = key==="opt2"
-    ? "Option 2 rides the ridge behind the Wall — the 23.3 miles from the high point to Elk Camp are what Option 5 never touches."
-    : "Option 5's grey dotted line is the Aufderheide, driven in about 75 minutes. Everything ridden is trail except the Larison Rock road climb.";
+  el("hint").textContent = {
+    opt2:"Option 2 rides the ridge behind the Wall — the 23.3 miles from the high point to Elk Camp are what Option 5 never touches.",
+    opt5:"Option 5's grey dotted line is the Aufderheide, driven in about 75 minutes. Everything ridden is trail except the Larison Rock road climb.",
+    opt7:"Two short dotted legs, both driven: 8.6 miles of OR-126 around the lava, then the Aufderheide. Nothing ridden here is rated harder than the Alpine, and that one is shuttled."
+  }[key];
   buildTable(o); buildProfile(o); clearOut();
-  document.getElementById("b2").setAttribute("aria-pressed", key==="opt2");
-  document.getElementById("b5").setAttribute("aria-pressed", key==="opt5");
+  ["opt2","opt5","opt7"].forEach(k=>
+    document.getElementById("b"+k.slice(3)).setAttribute("aria-pressed", String(k===key)));
 }
 
 /* ---------- readout ---------- */
@@ -202,5 +208,6 @@ function buildProfile(o){
 
 document.getElementById("b2").addEventListener("click",()=>render("opt2"));
 document.getElementById("b5").addEventListener("click",()=>render("opt5"));
+document.getElementById("b7").addEventListener("click",()=>render("opt7"));
 render("opt2");
 })();
