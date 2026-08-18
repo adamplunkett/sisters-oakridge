@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="vendor/leaflet.css?v=4">
 <title>Two Ways to Oakridge</title>
 <meta name="description" content="Interactive map of two four-day bikepacking routes from Sisters to Oakridge, Oregon.">
 <style>
@@ -49,6 +49,10 @@ header{display:flex;flex-direction:column;gap:10px;border-bottom:2px solid var(-
 #map{position:absolute;inset:0}
 .leaflet-container{background:var(--band-2);font:inherit;outline:none}
 .leaflet-control-attribution{font-size:10px;background:rgba(255,255,255,.82)}
+.leaflet-control a.fitbtn{background:var(--card);color:var(--ink);border:1px solid var(--rule);
+  border-radius:2px;padding:6px 10px;font:600 12px/1.2 inherit;text-decoration:none;display:block;
+  box-shadow:0 1px 3px rgba(0,0,0,.18);white-space:nowrap}
+.leaflet-control a.fitbtn:hover{border-color:var(--accent);color:var(--accent)}
 .leaflet-control-layers{border:1px solid var(--rule)!important;border-radius:2px!important;
   box-shadow:0 1px 4px rgba(0,0,0,.18)!important;background:var(--card)!important;color:var(--ink);
   font:500 12.5px/1.5 inherit;padding:8px 11px!important}
@@ -180,7 +184,7 @@ footer{color:var(--ink-3);font-size:12.5px;border-top:1px solid var(--rule);padd
   MTB Project, Trailforks and Oregon Timber Trail sources.
 </footer>
 </div>
-<script src="vendor/leaflet.js"></script>
-<script src="app.js"></script>
+<script src="vendor/leaflet.js?v=4"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

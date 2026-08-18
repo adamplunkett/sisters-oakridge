@@ -1,5 +1,5 @@
 (async function(){
-const D = await (await fetch("route.json")).json();
+const D = await (await fetch("route.json?v=4")).json();
 const css = getComputedStyle(document.documentElement);
 const C = k => css.getPropertyValue(k).trim();
 const COL = {
@@ -37,9 +37,23 @@ const bases = {
 };
 bases["USGS Topo"].addTo(map);
 L.control.layers(bases,null,{position:"bottomright",collapsed:false}).addTo(map);
+const FitCtl = L.Control.extend({onAdd(){
+  const div = L.DomUtil.create("div","fitwrap");
+  const a = L.DomUtil.create("a","fitbtn", div);
+  a.href = "#"; a.textContent = "Fit route"; a.setAttribute("role","button");
+  a.title = "Zoom out to the whole route";
+  L.DomEvent.disableClickPropagation(div);
+  L.DomEvent.on(a,"click",function(e){
+    L.DomEvent.preventDefault(e);
+    if(routeBounds) map.fitBounds(routeBounds,{padding:[22,22],animate:false});
+  });
+  return div;
+}});
+map.addControl(new FitCtl({position:"topleft"}));
 
 let layer = L.layerGroup().addTo(map);
 let cursor = null, curOpt = "opt2", segLines = [], flat = [];
+let firstFit = true, routeBounds = null;
 
 const el = id => document.getElementById(id);
 
@@ -85,8 +99,9 @@ function render(key){
   drawMarks();
   cursor = L.circleMarker([0,0],{radius:7,color:C("--accent"),weight:3.5,
     fillColor:C("--card"),fillOpacity:1,interactive:false,opacity:0}).addTo(layer);
-  const b = L.latLngBounds(o.segs.flatMap(s=>s.pts.map(p=>[p[0],p[1]])));
-  map.fitBounds(b,{padding:[22,22]});
+  routeBounds = L.latLngBounds(o.segs.flatMap(s=>s.pts.map(p=>[p[0],p[1]])));
+  // keep the reader's zoom and pan when switching options; only fit on first load
+  if(firstFit){ map.fitBounds(routeBounds,{padding:[22,22]}); firstFit = false; }
   el("t-dist").textContent = o.tot.dist+" mi";
   el("t-meas").textContent = "+"+o.tot.gain.toLocaleString()+" ft";
   el("hint").textContent = {
